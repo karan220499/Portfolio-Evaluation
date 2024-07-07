@@ -1,0 +1,35 @@
+import numpy as np
+import pandas as pd
+import yfinance as yf
+import matplotlib.pyplot as plt
+
+# Load historical data
+assets = ['AAPL', 'MSFT', 'GOOGL', 'TSLA', 'AMZN']
+data = yf.download(assets, start='2020-01-01', end='2023-01-01')['Adj Close']
+
+# Calculate daily returns
+returns = data.pct_change().dropna()
+
+# Portfolio weights
+weights = np.array([0.2, 0.3, 0.25, 0.15, 0.1])
+
+# Portfolio return
+portfolio_return = np.dot(returns.mean() * 252, weights)
+
+# Portfolio volatility
+portfolio_volatility = np.sqrt(np.dot(weights.T, np.dot(returns.cov() * 252, weights)))
+
+# Sharpe Ratio
+risk_free_rate = 0.01
+sharpe_ratio = (portfolio_return - risk_free_rate) / portfolio_volatility
+
+# Print the metrics
+print(f'Annualized Return: {portfolio_return:.2f}')
+print(f'Annualized Volatility: {portfolio_volatility:.2f}')
+print(f'Sharpe Ratio: {sharpe_ratio:.2f}')
+
+# Plot cumulative returns
+cumulative_returns = (returns + 1).cumprod()
+cumulative_returns.plot(figsize=(10, 6))
+plt.title('Cumulative Returns')
+plt.show()
