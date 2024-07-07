@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 import matplotlib.pyplot as plt
+import plotly.express as px
 
 # Load historical data
 assets = ['AAPL', 'MSFT', 'GOOGL', 'TSLA', 'AMZN']
@@ -23,7 +24,6 @@ portfolio_volatility = np.sqrt(np.dot(weights.T, np.dot(returns.cov() * 252, wei
 risk_free_rate = 0.01
 sharpe_ratio = (portfolio_return - risk_free_rate) / portfolio_volatility
 
-# Print the metrics
 print(f'Annualized Return: {portfolio_return:.2f}')
 print(f'Annualized Volatility: {portfolio_volatility:.2f}')
 print(f'Sharpe Ratio: {sharpe_ratio:.2f}')
@@ -33,3 +33,7 @@ cumulative_returns = (returns + 1).cumprod()
 cumulative_returns.plot(figsize=(10, 6))
 plt.title('Cumulative Returns')
 plt.show()
+
+cumulative_returns = (returns + 1).cumprod()
+fig = px.line(cumulative_returns, title='Cumulative Returns')
+fig.show()
